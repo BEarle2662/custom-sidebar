@@ -4,13 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sidebar Animation</title>
-
     <!-- Font Awesome CDN -->
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       rel="stylesheet"
     />
-
     <style>
       body {
         margin: 0;
@@ -30,19 +28,7 @@
         transition: width 0.3s ease-in-out;
         overflow: hidden;
         white-space: nowrap;
-      }
-
-      .sidebar.expanded {
-        width: 200px;
-      }
-
-      .sidebar .toggle-btn {
-        background-color: #00695c;
-        border: none;
-        color: white;
-        width: 100%;
         padding: 10px;
-        cursor: pointer;
       }
 
       .sidebar .menu {
@@ -54,6 +40,7 @@
       .sidebar .menu li {
         display: flex;
         align-items: center;
+        justify-content: center;
         padding: 10px;
         border-bottom: 1px solid #00796b;
         cursor: pointer;
@@ -69,23 +56,8 @@
         font-size: 18px;
       }
 
-      .sidebar .menu li span {
-        display: none;
-        transition: opacity 0.3s ease-in-out;
-      }
-
-      .sidebar.expanded .menu li span {
-        display: inline;
-        opacity: 1;
-      }
-
-      /* Active State Styling */
       .sidebar .menu li.active {
         background-color: #00796b;
-        color: #ffc107; /* Active text/icon color */
-      }
-
-      .sidebar .menu li.active i {
         color: #ffc107;
       }
 
@@ -95,23 +67,23 @@
         background-color: #00695c;
         color: white;
         overflow: hidden;
-        white-space: nowrap;
         transition: width 0.3s ease-in-out;
       }
 
       .sidebar2.expanded {
         width: 200px;
+        padding-top: 20px;
       }
 
       .sidebar2 ul {
         list-style-type: none;
         padding: 0;
         margin: 0;
-        display: none; /* Initially hidden */
+        display: none;
       }
 
       .sidebar2 ul.active {
-        display: block; /* Shown when active */
+        display: block;
       }
 
       .sidebar2 ul li {
@@ -120,34 +92,66 @@
         cursor: pointer;
       }
 
-      .sidebar2 ul li:hover {
+      .sidebar2 ul li.active {
         background-color: #004d40;
+        color: #ffc107;
       }
 
+      /* Main Content */
       .main-content {
         flex-grow: 1;
         padding: 20px;
       }
 
-      /* Icons */
-      .icon {
-        font-size: 18px;
+      .content-section {
+        display: none;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      .header-bg {
+        background-color: #dbdbdb;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+      }
+      .logo {
+        width: 160px;
+        height: 60px;
+      }
+      .hrms {
+        margin-left: auto;
+        margin-right: auto;
       }
     </style>
   </head>
   <body>
+    <header class="header-bg">
+      <img
+        src="https://programmes.gitam.edu/mba/assets/logos/mba_logo.png"
+        alt="logo-png"
+        class="logo"
+      />
+
+      <h1 class="hrms">HRMS</h1>
+    </header>
     <div class="sidebar-container">
       <!-- Main Sidebar -->
       <div class="sidebar">
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
         <ul class="menu">
-          <li onclick="activateMenu(this, 'section1')">
-            <i class="fas fa-briefcase"></i>
-            <span>Position</span>
+          <li class="active" onclick="showMainContent('home-content', this)">
+            <i class="fas fa-home"></i>
+            <!-- <span>Home</span> -->
           </li>
-          <li onclick="activateMenu(this, 'section2')">
+          <li onclick="showSidebar2('section1', this)">
+            <i class="fas fa-briefcase"></i>
+            <!-- <span>Position</span> -->
+          </li>
+          <li onclick="showSidebar2('section2', this)">
             <i class="fas fa-file-alt"></i>
-            <span>Leaves</span>
+            <!-- <span>Leaves</span> -->
           </li>
         </ul>
       </div>
@@ -155,54 +159,161 @@
       <!-- Secondary Sidebar -->
       <div class="sidebar2">
         <ul class="sidebar2-section1">
-          <li>All</li>
-          <li>Assign Recruiter</li>
-          <li>Position Details</li>
-          <li>Feedback Details</li>
+          <li onclick="showContent('assign-recruiter-content', this)">
+            Assign Recruiter
+          </li>
+          <li onclick="showContent('position-details-content', this)">
+            Position Details
+          </li>
         </ul>
         <ul class="sidebar2-section2">
-          <li>Leaves</li>
-          <li>Approved Leaves</li>
-          <li>Pending</li>
-          <li>Feedback Details</li>
+          <li onclick="showContent('leaves-content', this)">Leaves</li>
+          <li onclick="showContent('approved-leaves-content', this)">
+            Approved Leaves
+          </li>
         </ul>
       </div>
 
       <!-- Main Content -->
       <div class="main-content">
-        <h1>Welcome to the Dashboard</h1>
+        <div id="home-content" class="content-section active">
+          <h1>Welcome to the Home Page</h1>
+        </div>
+        <div id="assign-recruiter-content" class="content-section">
+          <h1>Assign Recruiter</h1>
+        </div>
+        <div id="position-details-content" class="content-section">
+          <h1>Position Details</h1>
+        </div>
+        <div id="leaves-content" class="content-section">
+          <h1>Leaves</h1>
+        </div>
+        <div id="approved-leaves-content" class="content-section">
+          <h1>Approved Leaves</h1>
+        </div>
       </div>
     </div>
 
-    <script>
-      // Toggle sidebar width
-      function toggleSidebar() {
-        const sidebar = document.querySelector(".sidebar");
-        sidebar.classList.toggle("expanded");
-      }
-
-      // Activate menu item and show secondary sidebar
-      function activateMenu(element, section) {
-        // Remove 'active' class from all menu items
-        const menuItems = document.querySelectorAll(".menu li");
-        menuItems.forEach((item) => item.classList.remove("active"));
-
-        // Add 'active' class to clicked menu item
+    <!-- <script>
+      function showMainContent(contentId, element) {
+        // Activate the main sidebar menu item
+        document.querySelectorAll(".sidebar .menu li").forEach((li) => {
+          li.classList.remove("active");
+        });
         element.classList.add("active");
 
-        // Show the corresponding secondary sidebar section
-        const sidebar2 = document.querySelector(".sidebar2");
-        const sections = sidebar2.querySelectorAll("ul");
+        // Show the corresponding content
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(contentId).classList.add("active");
 
-        // Hide all sections
-        sections.forEach((ul) => ul.classList.remove("active"));
+        // Hide secondary sidebar
+        document.querySelector(".sidebar2").classList.remove("expanded");
+      }
 
-        // Show the correct section
-        const activeSection = sidebar2.querySelector(`.sidebar2-${section}`);
-        activeSection.classList.add("active");
+      function showSidebar2(section, element) {
+        // Activate the main sidebar menu item
+        document.querySelectorAll(".sidebar .menu li").forEach((li) => {
+          li.classList.remove("active");
+        });
+        element.classList.add("active");
 
         // Expand the secondary sidebar
+        const sidebar2 = document.querySelector(".sidebar2");
         sidebar2.classList.add("expanded");
+
+        // Show the corresponding section
+        document
+          .querySelectorAll(".sidebar2 ul")
+          .forEach((ul) => ul.classList.remove("active"));
+        document.querySelector(`.sidebar2-${section}`).classList.add("active");
+
+        // Clear secondary sidebar active state
+        document.querySelectorAll(".sidebar2 ul li").forEach((li) => {
+          li.classList.remove("active");
+        });
+      }
+
+      function showContent(contentId, element) {
+        // Activate the secondary sidebar menu item
+        document.querySelectorAll(".sidebar2 ul li").forEach((li) => {
+          li.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        // Show the corresponding content
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(contentId).classList.add("active");
+      }
+    </script> -->
+
+    <script>
+      function showMainContent(contentId, element) {
+        // Activate the main sidebar menu item
+        document.querySelectorAll(".sidebar .menu li").forEach((li) => {
+          li.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        // Show the corresponding content
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(contentId).classList.add("active");
+
+        // Hide secondary sidebar
+        document.querySelector(".sidebar2").classList.remove("expanded");
+      }
+
+      function showSidebar2(section, element) {
+        // Activate the main sidebar menu item
+        document.querySelectorAll(".sidebar .menu li").forEach((li) => {
+          li.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        // Expand the secondary sidebar
+        const sidebar2 = document.querySelector(".sidebar2");
+        sidebar2.classList.add("expanded");
+
+        // Show the corresponding section
+        document
+          .querySelectorAll(".sidebar2 ul")
+          .forEach((ul) => ul.classList.remove("active"));
+        const activeSection = document.querySelector(`.sidebar2-${section}`);
+        activeSection.classList.add("active");
+
+        // Automatically activate the first <li> in the section
+        const firstItem = activeSection.querySelector("li");
+        if (firstItem) {
+          activeSection
+            .querySelectorAll("li")
+            .forEach((li) => li.classList.remove("active"));
+          firstItem.classList.add("active");
+
+          // Show the corresponding content for the first <li>
+          const contentId = firstItem
+            .getAttribute("onclick")
+            .match(/'([^']+)'/)[1];
+          showContent(contentId, firstItem);
+        }
+      }
+
+      function showContent(contentId, element) {
+        // Activate the secondary sidebar menu item
+        document.querySelectorAll(".sidebar2 ul li").forEach((li) => {
+          li.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        // Show the corresponding content
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.getElementById(contentId).classList.add("active");
       }
     </script>
   </body>
